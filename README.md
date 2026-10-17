@@ -150,23 +150,11 @@ Stop the server with `Ctrl+C`. Deactivate the virtual environment with `deactiva
 
 ## Sign in with Google (optional)
 
-The app works without this: everyone can use it as a guest, and the "Sign in with Google" button shows as "not set up". To switch it on you need your own Google OAuth credentials (Google issues these per app, so they can't be shipped in the repo).
+The app works without this: everyone can use it as a guest, and the "Sign in with Google" button shows as "not set up". To switch it on you need your own Google OAuth Client ID and secret (Google issues these per app, so they can't be shipped in the repo).
 
-1. Go to <https://console.cloud.google.com/> and create a project (or pick one).
-2. **APIs & Services → OAuth consent screen**: choose **External**, fill in the app name and your email, and add your Google account under **Test users** while the app is in testing mode.
-3. **APIs & Services → Credentials → Create credentials → OAuth client ID**, application type **Web application**.
-4. Under **Authorized redirect URIs** add exactly: `http://127.0.0.1:5000/auth/callback`
-5. Copy the **Client ID** and **Client secret**.
-6. In the project folder, copy the example file and paste the values in:
+**Step-by-step guide: [docs/GOOGLE_SIGNIN.md](docs/GOOGLE_SIGNIN.md)**
 
-```bash
-cp .env.example .env
-# edit .env and set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET
-```
-
-7. Restart the app and open **http://127.0.0.1:5000** (use `127.0.0.1`, not `localhost`, so it matches the redirect URI).
-
-`.env` and the auto-generated `.secret_key` are git-ignored. Never commit them. Existing assignments from before accounts existed are given to the first person who signs in.
+In short: create an OAuth client in Google Cloud Console with the redirect URI `http://127.0.0.1:5000/auth/callback`, then `cp .env.example .env`, fill in `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`, and restart the app.
 
 ## Using the app
 
@@ -195,6 +183,7 @@ app.py              routes, database access, priority logic, Google sign-in
 requirements.txt    Python dependencies (Flask)
 templates/          base, landing, dashboard, add, assignments, Google button partial
 static/style.css    styling
+docs/               extra guides (Google sign-in setup)
 planner.db          SQLite database, created automatically on first run
 ```
 
