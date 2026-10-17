@@ -31,7 +31,7 @@ Each should print a version. Python must be 3.9 or newer. If a command says "not
 | Fedora | `sudo dnf install -y git` |
 | Windows | Download from <https://git-scm.com/download/win> and run the installer with the defaults |
 
-No Git? You can skip it: on the GitHub repo page click **Code → Download ZIP**, unzip it, and continue from "Quick start" at the `cd study-planner` step.
+Git is optional. If you don't want to install it, use "Option B – without Git" in [Step 1 of the Quick start](#step-1-get-the-code) to download the project as a ZIP instead.
 
 ### 3. Install Python (if missing or older than 3.9)
 
@@ -80,10 +80,40 @@ sudo apt install -y python3-venv
 
 ## Quick start
 
+### Step 1: Get the code
+
+**Option A – with Git** (Git installed):
+
 ```bash
 git clone https://github.com/SandeepN97/study-planner.git
 cd study-planner
+```
 
+**Option B – without Git** (no installation needed):
+
+1. Open <https://github.com/SandeepN97/study-planner> in your browser.
+2. Click the green **Code** button, then **Download ZIP**.
+3. Unzip it. This creates a folder named `study-planner-main`.
+4. Open a terminal in that folder:
+   - **macOS:** right-click the folder → **New Terminal at Folder** (or `cd ~/Downloads/study-planner-main`)
+   - **Windows:** open the folder in File Explorer, click the address bar, type `cmd`, press Enter (or `cd %USERPROFILE%\Downloads\study-planner-main`)
+   - **Linux:** `cd ~/Downloads/study-planner-main`
+
+Prefer the command line? This also works without Git, on macOS/Linux and Windows 10+ (the built-in `curl` and `tar`):
+
+```bash
+curl -L -o study-planner.tar.gz https://github.com/SandeepN97/study-planner/archive/refs/heads/main.tar.gz
+tar -xzf study-planner.tar.gz
+cd study-planner-main
+```
+
+Confirm you are in the right folder by checking that `app.py` is listed (`ls` on macOS/Linux, `dir` on Windows).
+
+### Step 2: Set up and run
+
+From inside the project folder (the one containing `app.py`):
+
+```bash
 python3 -m venv venv
 source venv/bin/activate        # Windows (PowerShell): venv\Scripts\Activate.ps1
                                 # Windows (cmd):        venv\Scripts\activate.bat
