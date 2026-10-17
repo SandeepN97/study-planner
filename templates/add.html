@@ -1,24 +1,32 @@
 {% extends "base.html" %}
-{% block title %}Add Assignment{% endblock %}
+{% block title %}Add assignment · Study Planner{% endblock %}
 {% block content %}
-<h1>Add an Assignment</h1>
-<form method="post" class="card">
-  <label>Course
-    <input name="course" value="{{ form.get('course', '') }}" placeholder="e.g. COMP3322" required>
-  </label>
-  <label>Title
-    <input name="title" value="{{ form.get('title', '') }}" placeholder="e.g. Project proposal" required>
-  </label>
-  <label>Due date
-    <input type="date" name="due_date" value="{{ form.get('due_date', '') }}" required>
-  </label>
-  <label>Difficulty (1 easy – 5 hard)
-    <select name="difficulty">
-      {% for n in range(1, 6) %}
-        <option value="{{ n }}" {% if form.get('difficulty', '3')|string == n|string %}selected{% endif %}>{{ n }}</option>
-      {% endfor %}
-    </select>
-  </label>
-  <button type="submit">Save assignment</button>
-</form>
+<div class="form-layout">
+  <div class="page-head">
+    <h1>Add an assignment</h1>
+    <p class="lead">Give it a due date and a difficulty. We do the ranking.</p>
+    <p class="hint"><b>How difficulty counts:</b> each level adds 2 points to the priority score, on top of urgency. A hard assignment due next week can outrank an easy one due tomorrow.</p>
+  </div>
+
+  <form method="post" class="panel">
+    <label>Course
+      <input name="course" value="{{ form.get('course', '') }}" placeholder="e.g. COMP3322" required>
+    </label>
+    <label>Title
+      <input name="title" value="{{ form.get('title', '') }}" placeholder="e.g. Project proposal" required>
+    </label>
+    <label>Due date
+      <input type="date" name="due_date" value="{{ form.get('due_date', '') }}" required>
+    </label>
+    <label>Difficulty
+      <select name="difficulty">
+        {% set labels = {1: '1 – easy', 2: '2', 3: '3 – moderate', 4: '4', 5: '5 – hard'} %}
+        {% for n in range(1, 6) %}
+          <option value="{{ n }}" {% if form.get('difficulty', '3')|string == n|string %}selected{% endif %}>{{ labels[n] }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <button type="submit">Save assignment</button>
+  </form>
+</div>
 {% endblock %}

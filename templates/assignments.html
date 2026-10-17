@@ -1,45 +1,66 @@
 {% extends "base.html" %}
-{% block title %}Search &amp; Filter{% endblock %}
+{% block title %}Search &amp; filter · Study Planner{% endblock %}
 {% block content %}
-<h1>Search &amp; Filter</h1>
-<form method="get" class="card filters">
-  <input name="q" value="{{ q }}" placeholder="Search course or title">
-  <select name="status">
-    <option value="pending" {% if status == 'pending' %}selected{% endif %}>Pending</option>
-    <option value="done" {% if status == 'done' %}selected{% endif %}>Done</option>
-    <option value="all" {% if status == 'all' %}selected{% endif %}>All</option>
-  </select>
-  <label class="inline">Due by <input type="date" name="due_before" value="{{ due_before }}"></label>
+<div class="page-head">
+  <h1>Search &amp; filter</h1>
+</div>
+
+<form method="get" class="filters" role="search">
+  <label class="grow">Course or title
+    <input name="q" value="{{ q }}" placeholder="Search assignments">
+  </label>
+  <label>Status
+    <select name="status">
+      <option value="pending" {% if status == 'pending' %}selected{% endif %}>Pending</option>
+      <option value="done" {% if status == 'done' %}selected{% endif %}>Done</option>
+      <option value="all" {% if status == 'all' %}selected{% endif %}>All</option>
+    </select>
+  </label>
+  <label>Due by
+    <input type="date" name="due_before" value="{{ due_before }}">
+  </label>
   <button type="submit">Search</button>
 </form>
 
-<p class="muted">{{ items|length }} result(s), sorted by priority (highest first)</p>
+<p class="result-count">{{ items|length }} result{{ '' if items|length == 1 else 's' }}, highest priority first</p>
 
 {% if items %}
-<table class="card">
-  <tr><th>Course</th><th>Title</th><th>Due</th><th>Diff.</th><th>Score</th><th></th></tr>
-  {% for i in items %}
-  <tr class="{{ 'done' if i.done }}">
-    <td>{{ i.course }}</td>
-    <td>{{ i.title }}</td>
-    <td>
-      {{ i.due_date }}
-      {% if not i.done and i.days_left < 0 %}<span class="tag red">Overdue</span>{% endif %}
-    </td>
-    <td>{{ i.difficulty }}</td>
-    <td>{{ i.score }}</td>
-    <td class="actions">
-      <form method="post" action="{{ url_for('toggle', aid=i.id) }}">
-        <button class="small">{{ 'Undo' if i.done else 'Done' }}</button>
-      </form>
-      <form method="post" action="{{ url_for('delete', aid=i.id) }}">
-        <button class="small danger">Delete</button>
-      </form>
-    </td>
-  </tr>
-  {% endfor %}
-</table>
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr><th>Course</th><th>Title</th><th>Due</th><th class="num">Difficulty</th><th class="num">Score</th><th><span class="sr-only">Actions</span></th></tr>
+    </thead>
+    <tbody>
+      {% for i in items %}
+      <tr class="{{ 'done' if i.done }}">
+        <td>{{ i.course }}</td>
+        <td>{{ i.title }}</td>
+        <td>
+          {{ i.due_date }}
+          {% if not i.done and i.days_left < 0 %}<span class="tag red">Overdue</span>{% endif %}
+        </td>
+        <td class="num">{{ i.difficulty }}</td>
+        <td class="num"><span class="score">{{ i.score }}</span></td>
+        <td>
+          <div class="actions">
+            <form method="post" action="{{ url_for('toggle', aid=i.id) }}">
+              <button class="small">{{ 'Undo' if i.done else 'Mark done' }}</button>
+            </form>
+            <form method="post" action="{{ url_for('delete', aid=i.id) }}">
+              <button class="small danger">Delete</button>
+            </form>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
 {% else %}
-<p class="card">No assignments match. <a href="{{ url_for('add') }}">Add one.</a></p>
+<section class="empty">
+  <h2>No assignments match</h2>
+  <p>Try a different search, or clear the filters.</p>
+  <a class="btn-link" href="{{ url_for('add') }}">Add an assignment</a>
+</section>
 {% endif %}
 {% endblock %}

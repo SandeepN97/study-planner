@@ -3,3 +3,6 @@ __pycache__/
 *.pyc
 planner.db
 .DS_Store
+.agents/
+.claude/
+skills-lock.json
