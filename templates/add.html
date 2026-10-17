@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Add Assignment{% endblock %}
+{% block content %}
+<h1>Add an Assignment</h1>
+<form method="post" class="card">
+  <label>Course
+    <input name="course" value="{{ form.get('course', '') }}" placeholder="e.g. COMP3322" required>
+  </label>
+  <label>Title
+    <input name="title" value="{{ form.get('title', '') }}" placeholder="e.g. Project proposal" required>
+  </label>
+  <label>Due date
+    <input type="date" name="due_date" value="{{ form.get('due_date', '') }}" required>
+  </label>
+  <label>Difficulty (1 easy – 5 hard)
+    <select name="difficulty">
+      {% for n in range(1, 6) %}
+        <option value="{{ n }}" {% if form.get('difficulty', '3')|string == n|string %}selected{% endif %}>{{ n }}</option>
+      {% endfor %}
+    </select>
+  </label>
+  <button type="submit">Save assignment</button>
+</form>
+{% endblock %}

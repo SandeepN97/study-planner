@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Welcome to Study Planner</h1>
+<p class="lead">Track assignments, search them, and get a smart recommendation for what to work on first.</p>
+
+<div class="stats">
+  <div class="stat"><span>{{ pending }}</span>Pending</div>
+  <div class="stat"><span>{{ total }}</span>Total saved</div>
+</div>
+
+<section class="card highlight">
+  <h2>🎯 Work on this first</h2>
+  {% if recommended %}
+    <p class="big">{{ recommended.title }} <small>({{ recommended.course }})</small></p>
+    <p>
+      Due {{ recommended.due_date }}
+      {% if recommended.days_left < 0 %}<span class="tag red">Overdue by {{ -recommended.days_left }}d</span>
+      {% elif recommended.days_left == 0 %}<span class="tag red">Due today</span>
+      {% else %}<span class="tag">{{ recommended.days_left }} days left</span>{% endif %}
+      · Difficulty {{ recommended.difficulty }}/5 · Priority score {{ recommended.score }}
+    </p>
+  {% else %}
+    <p>No pending assignments yet. <a href="{{ url_for('add') }}">Add your first one.</a></p>
+  {% endif %}
+</section>
+
+{% if top %}
+<section class="card">
+  <h2>Top priorities</h2>
+  <table>
+    <tr><th>Course</th><th>Title</th><th>Due</th><th>Diff.</th><th>Score</th></tr>
+    {% for i in top %}
+    <tr>
+      <td>{{ i.course }}</td><td>{{ i.title }}</td><td>{{ i.due_date }}</td>
+      <td>{{ i.difficulty }}</td><td>{{ i.score }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+</section>
+{% endif %}
+{% endblock %}
