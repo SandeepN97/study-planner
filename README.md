@@ -7,6 +7,7 @@ A small Flask + SQLite web app for tracking assignments and deciding what to wor
 1. **Add an assignment** – enter course, title, due date, and difficulty (1–5). It is saved to SQLite and a confirmation message is shown.
 2. **Search, filter, and recommendation** – search by course or title, filter by status (pending / done / all) or due date. Assignments are ranked by a priority score, and the home page recommends what to tackle first.
 3. Mark assignments done (or undo) and delete them.
+4. **Landing page and accounts** – a public home page at `/`. Use the app as a guest right away, or sign in with Google to keep your assignments on your account. Guest assignments move to your account when you sign in.
 
 ## Prerequisites
 
@@ -131,7 +132,7 @@ Stop the server with `Ctrl+C`. Deactivate the virtual environment with `deactiva
 ## How it runs
 
 - `python app.py` creates `planner.db` automatically on first run (via `init_db()`) and starts Flask in debug mode with auto-reload on port 5000.
-- Always start it with `python app.py`. Running it with `flask run` skips `init_db()`, so the `assignments` table will not exist and pages will error.
+- The database tables are created (and older databases migrated) automatically when the app starts, however you start it (`python app.py` or `flask run`).
 - To reset all data, stop the server and delete `planner.db`; it is recreated on the next start.
 
 ### Troubleshooting
@@ -140,7 +141,6 @@ Stop the server with `Ctrl+C`. Deactivate the virtual environment with `deactiva
 | --- | --- |
 | `ModuleNotFoundError: No module named 'flask'` | The venv is not active or dependencies are not installed. Run `source venv/bin/activate` then `pip install -r requirements.txt`. |
 | `Address already in use` (port 5000) | On macOS, AirPlay Receiver uses port 5000. Turn it off in System Settings → General → AirDrop & Handoff, or change the port in the last line of `app.py`: `app.run(debug=True, port=5001)`. |
-| `no such table: assignments` | You started the app without `python app.py`. Start it that way (see above). |
 | `command not found: python` | Use `python3` instead (Windows: `py`). |
 | `pip: command not found` | See [Install pip](#4-install-pip-if-missing), or use `python3 -m pip install -r requirements.txt`. |
 | `python3 -m venv venv` fails with "ensurepip is not available" | Ubuntu/Debian: `sudo apt install -y python3-venv`. |
@@ -148,11 +148,32 @@ Stop the server with `Ctrl+C`. Deactivate the virtual environment with `deactiva
 | PowerShell: "running scripts is disabled" on `Activate.ps1` | Run `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`, or use `venv\Scripts\activate.bat` in cmd. |
 | `python` opens the Microsoft Store (Windows) | Python isn't installed or isn't on PATH. Reinstall from python.org and tick "Add python.exe to PATH". |
 
+## Sign in with Google (optional)
+
+The app works without this: everyone can use it as a guest, and the "Sign in with Google" button shows as "not set up". To switch it on you need your own Google OAuth credentials (Google issues these per app, so they can't be shipped in the repo).
+
+1. Go to <https://console.cloud.google.com/> and create a project (or pick one).
+2. **APIs & Services → OAuth consent screen**: choose **External**, fill in the app name and your email, and add your Google account under **Test users** while the app is in testing mode.
+3. **APIs & Services → Credentials → Create credentials → OAuth client ID**, application type **Web application**.
+4. Under **Authorized redirect URIs** add exactly: `http://127.0.0.1:5000/auth/callback`
+5. Copy the **Client ID** and **Client secret**.
+6. In the project folder, copy the example file and paste the values in:
+
+```bash
+cp .env.example .env
+# edit .env and set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET
+```
+
+7. Restart the app and open **http://127.0.0.1:5000** (use `127.0.0.1`, not `localhost`, so it matches the redirect URI).
+
+`.env` and the auto-generated `.secret_key` are git-ignored. Never commit them. Existing assignments from before accounts existed are given to the first person who signs in.
+
 ## Using the app
 
 | Page | URL | What it does |
 | --- | --- | --- |
-| Home | `/` | Shows counts, the recommended next assignment, and the top 5 priorities |
+| Home | `/` | Landing page: what the app does, sign in with Google or continue as guest |
+| Dashboard | `/dashboard` | Shows counts, the recommended next assignment, and the top 5 priorities |
 | Add | `/add` | Form to add an assignment; shows a confirmation on success |
 | Search & Filter | `/assignments` | Search by course/title, filter by status and due date, mark done, delete |
 
@@ -169,9 +190,10 @@ Higher score means work on it sooner. Only pending (not done) assignments are re
 ## Project layout
 
 ```
-app.py              routes, database access, priority logic
+app.py              routes, database access, priority logic, Google sign-in
+.env.example        template for Google credentials (copy to .env)
 requirements.txt    Python dependencies (Flask)
-templates/          base.html, home.html, add.html, assignments.html
+templates/          base, landing, dashboard, add, assignments, Google button partial
 static/style.css    styling
 planner.db          SQLite database, created automatically on first run
 ```

@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block title %}Study Planner · Know what to study next{% endblock %}
+{% block content %}
+<section class="hero">
+  <div class="hero-copy">
+    <h1>Know what to study next.</h1>
+    <p class="lead">Add your assignments once. Study Planner ranks them by deadline and difficulty and tells you where to start.</p>
+    <div class="cta-row">
+      {% if user or has_session %}
+        <a class="btn-link" href="{{ url_for('dashboard') }}">Open my planner</a>
+      {% else %}
+        {% include "_google_button.html" %}
+        <a class="text-link" href="{{ url_for('dashboard') }}">Continue as guest</a>
+      {% endif %}
+    </div>
+    {% if not user and not has_session %}
+    <p class="fine">No account needed. Guests keep their assignments in this browser.</p>
+    {% endif %}
+  </div>
+
+  <figure class="sample" aria-label="Example ranking">
+    <figcaption>Example ranking</figcaption>
+    <ol>
+      <li class="top">
+        <div><b>Database project</b><span>COMP3322 · due in 2 days · difficulty 4</span></div>
+        <em>16</em>
+      </li>
+      <li>
+        <div><b>Reading quiz</b><span>HIST1001 · due in 1 day · difficulty 1</span></div>
+        <em>11</em>
+      </li>
+      <li>
+        <div><b>Essay outline</b><span>ENGL2010 · due in 9 days · difficulty 3</span></div>
+        <em>7</em>
+      </li>
+    </ol>
+    <p class="sample-note">A hard project due soon outranks an easy quiz due tomorrow.</p>
+  </figure>
+</section>
+
+<section class="section split" aria-labelledby="how-heading">
+  <h2 id="how-heading" class="split-title">How it works</h2>
+  <div class="split-body steps">
+    <div>
+      <h3>Add what's due</h3>
+      <p>Course, title, due date and a difficulty from 1 to 5. It takes about ten seconds per assignment.</p>
+    </div>
+    <div>
+      <h3>See the ranking</h3>
+      <p>Every pending assignment gets a priority score. The highest one is pinned to the top of your dashboard.</p>
+    </div>
+    <div>
+      <h3>Start with the top one</h3>
+      <p>Mark it done and the next one moves up. Search and filter by course, status or due date any time.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section formula" aria-labelledby="score-heading">
+  <h2 id="score-heading">One simple score, no black box</h2>
+  <p class="formula-line">score = urgency + difficulty × 2</p>
+  <p class="lead">Urgency is 10 minus the days left (never below 0), and 15 once something is overdue. A difficulty-4 assignment due in 2 days scores 8 + 8 = 16.</p>
+</section>
+
+<section class="section split" aria-labelledby="data-heading">
+  <h2 id="data-heading" class="split-title">Guest or Google, your choice</h2>
+  <div class="split-body two">
+    <div>
+      <h3>As a guest</h3>
+      <p>Start right away. Your assignments are saved in this browser. Clearing cookies or switching device starts you fresh.</p>
+    </div>
+    <div>
+      <h3>With Google</h3>
+      <p>Your assignments live on your account and follow you across devices. Anything you added as a guest comes with you. We store only your name, email and profile picture.</p>
+    </div>
+  </div>
+</section>
+
+<section class="final-cta">
+  <h2>Ready to plan this week?</h2>
+  <div class="cta-row">
+    <a class="btn-link" href="{{ url_for('dashboard') }}">{{ 'Open my planner' if (user or has_session) else 'Start as a guest' }}</a>
+    {% if not user %}{% include "_google_button.html" %}{% endif %}
+  </div>
+</section>
+{% endblock %}
+{% block after_main %}
+<footer class="site-footer">
+  <p>Study Planner · built with Flask and SQLite for COMP3322.</p>
+</footer>
+{% endblock %}

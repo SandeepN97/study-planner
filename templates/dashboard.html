@@ -1,9 +1,17 @@
 {% extends "base.html" %}
 {% block content %}
+{% block title %}Dashboard · Study Planner{% endblock %}
 <div class="page-head">
-  <h1>Know what to study next.</h1>
-  <p class="lead">Add your assignments once. The planner ranks them by deadline and difficulty and tells you where to start.</p>
+  <h1>{% if user %}Hi, {{ user.name.split(' ')[0] }}.{% else %}Your planner.{% endif %}</h1>
+  <p class="lead">Your assignments, ranked by deadline and difficulty.</p>
 </div>
+
+{% if not user %}
+<aside class="guest-note" role="note">
+  <p><b>You're using a guest session.</b> Your assignments are saved in this browser only. Sign in to keep them on your account and open them anywhere.</p>
+  {% include "_google_button.html" %}
+</aside>
+{% endif %}
 
 <div class="stats">
   <div class="stat"><b>{{ pending }}</b>pending</div>

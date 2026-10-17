@@ -6,3 +6,5 @@ planner.db
 .agents/
 .claude/
 skills-lock.json
+.env
+.secret_key

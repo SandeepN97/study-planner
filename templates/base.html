@@ -17,9 +17,20 @@
     <nav class="site-nav" aria-label="Main">
       <a class="brand" href="{{ url_for('home') }}">Study<span>Planner</span></a>
       <div class="links">
-        <a href="{{ url_for('home') }}" {% if request.endpoint == 'home' %}aria-current="page"{% endif %}>Home</a>
+        <a href="{{ url_for('dashboard') }}" {% if request.endpoint == 'dashboard' %}aria-current="page"{% endif %}>Dashboard</a>
         <a href="{{ url_for('add') }}" {% if request.endpoint == 'add' %}aria-current="page"{% endif %}>Add assignment</a>
         <a href="{{ url_for('assignments') }}" {% if request.endpoint == 'assignments' %}aria-current="page"{% endif %}>Search &amp; filter</a>
+      </div>
+      <div class="account">
+        {% if user %}
+          <span class="who">
+            {% if user.picture %}<img src="{{ user.picture }}" alt="" width="28" height="28" referrerpolicy="no-referrer">{% else %}<span class="avatar">{{ user.name[:1]|upper }}</span>{% endif %}
+            <span class="who-name">{{ user.name.split(' ')[0] }}</span>
+          </span>
+          <form method="post" action="{{ url_for('logout') }}"><button class="small" type="submit">Sign out</button></form>
+        {% else %}
+          {% include "_google_button.html" %}
+        {% endif %}
       </div>
     </nav>
   </header>
@@ -31,6 +42,7 @@
     {% endwith %}
     {% block content %}{% endblock %}
   </main>
+  {% block after_main %}{% endblock %}
   <script src="{{ url_for('static', filename='dropdown.js') }}" defer></script>
 </body>
 </html>
