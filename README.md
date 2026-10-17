@@ -8,11 +8,75 @@ A small Flask + SQLite web app for tracking assignments and deciding what to wor
 2. **Search, filter, and recommendation** – search by course or title, filter by status (pending / done / all) or due date. Assignments are ranked by a priority score, and the home page recommends what to tackle first.
 3. Mark assignments done (or undo) and delete them.
 
-## Requirements
+## Prerequisites
 
-- Python 3.9 or newer (check with `python3 --version`)
-- pip
-- No other setup: SQLite ships with Python, and the only dependency is Flask (`Flask>=3.0`)
+You need four things: **Git**, **Python 3.9+**, **pip**, and **venv** (Python's virtual-environment module). SQLite ships with Python, and the only package dependency is Flask (`Flask>=3.0`), which `pip` installs for you.
+
+### 1. Check what you already have
+
+```bash
+git --version
+python3 --version      # Windows: python --version  (or: py --version)
+pip3 --version         # Windows: pip --version     (or: py -m pip --version)
+```
+
+Each should print a version. Python must be 3.9 or newer. If a command says "not found", install that item below.
+
+### 2. Install Git (if missing)
+
+| OS | Command / link |
+| --- | --- |
+| macOS | `xcode-select --install` (or `brew install git`) |
+| Ubuntu / Debian | `sudo apt update && sudo apt install -y git` |
+| Fedora | `sudo dnf install -y git` |
+| Windows | Download from <https://git-scm.com/download/win> and run the installer with the defaults |
+
+No Git? You can skip it: on the GitHub repo page click **Code → Download ZIP**, unzip it, and continue from "Quick start" at the `cd study-planner` step.
+
+### 3. Install Python (if missing or older than 3.9)
+
+| OS | Steps |
+| --- | --- |
+| macOS | Download the installer from <https://www.python.org/downloads/macos/>, or run `brew install python` if you use [Homebrew](https://brew.sh) |
+| Ubuntu / Debian | `sudo apt update && sudo apt install -y python3 python3-pip python3-venv` |
+| Fedora | `sudo dnf install -y python3 python3-pip` |
+| Windows | Download from <https://www.python.org/downloads/windows/>. **On the first installer screen, tick "Add python.exe to PATH"**, then click Install Now |
+
+Close and reopen your terminal afterwards, then re-run the version checks from step 1.
+
+### 4. Install pip (if missing)
+
+pip is bundled with Python from python.org and Homebrew, so you usually already have it. If `pip3 --version` fails:
+
+```bash
+python3 -m ensurepip --upgrade        # works on most installs
+```
+
+If that reports `ensurepip` is unavailable (common on Ubuntu/Debian):
+
+```bash
+sudo apt install -y python3-pip       # Ubuntu / Debian
+sudo dnf install -y python3-pip       # Fedora
+```
+
+Last resort, on any OS:
+
+```bash
+curl -O https://bootstrap.pypa.io/get-pip.py
+python3 get-pip.py
+```
+
+Windows equivalent: `py -m ensurepip --upgrade`.
+
+If `pip3` isn't found but `python3 -m pip --version` works, use `python3 -m pip` everywhere this README says `pip`.
+
+### 5. Make sure venv works (Ubuntu / Debian only)
+
+Debian-based systems ship Python without `venv`. If `python3 -m venv venv` later fails with "ensurepip is not available", run:
+
+```bash
+sudo apt install -y python3-venv
+```
 
 ## Quick start
 
@@ -47,7 +111,12 @@ Stop the server with `Ctrl+C`. Deactivate the virtual environment with `deactiva
 | `ModuleNotFoundError: No module named 'flask'` | The venv is not active or dependencies are not installed. Run `source venv/bin/activate` then `pip install -r requirements.txt`. |
 | `Address already in use` (port 5000) | On macOS, AirPlay Receiver uses port 5000. Turn it off in System Settings → General → AirDrop & Handoff, or change the port in the last line of `app.py`: `app.run(debug=True, port=5001)`. |
 | `no such table: assignments` | You started the app without `python app.py`. Start it that way (see above). |
-| `command not found: python` | Use `python3` instead. |
+| `command not found: python` | Use `python3` instead (Windows: `py`). |
+| `pip: command not found` | See [Install pip](#4-install-pip-if-missing), or use `python3 -m pip install -r requirements.txt`. |
+| `python3 -m venv venv` fails with "ensurepip is not available" | Ubuntu/Debian: `sudo apt install -y python3-venv`. |
+| `error: externally-managed-environment` when running pip | You are outside the venv. Run `source venv/bin/activate` first, then retry. |
+| PowerShell: "running scripts is disabled" on `Activate.ps1` | Run `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`, or use `venv\Scripts\activate.bat` in cmd. |
+| `python` opens the Microsoft Store (Windows) | Python isn't installed or isn't on PATH. Reinstall from python.org and tick "Add python.exe to PATH". |
 
 ## Using the app
 
