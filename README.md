@@ -156,6 +156,15 @@ The app works without this: everyone can use it as a guest, and the "Sign in wit
 
 In short: create an OAuth client in Google Cloud Console with the redirect URI `http://127.0.0.1:5000/auth/callback`, then `cp .env.example .env`, fill in `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`, and restart the app.
 
+## Sample data
+
+To see the app with realistic content (15 assignments across six courses, some overdue, some due soon, some done; due dates are relative to today so the ranking always looks right):
+
+- **In the app:** on an empty dashboard click **Load sample data**. It works for guests and signed-in users and only fills an empty planner.
+- **From the terminal:** `python seed.py` adds the samples to `planner.db` with no owner, so the first person to sign in with Google receives them. `python seed.py --reset` first deletes all owner-less rows.
+
+The data lives in `seed_data.py` if you want to edit it.
+
 ## Using the app
 
 | Page | URL | What it does |
@@ -183,6 +192,8 @@ app.py              routes, database access, priority logic, Google sign-in
 requirements.txt    Python dependencies (Flask)
 templates/          base, landing, dashboard, add, assignments, Google button partial
 static/style.css    styling
+seed_data.py        sample assignments (used by the button and seed.py)
+seed.py             command-line seeder
 docs/               extra guides (Google sign-in setup)
 planner.db          SQLite database, created automatically on first run
 ```

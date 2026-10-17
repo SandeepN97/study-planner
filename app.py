@@ -14,6 +14,8 @@ from dotenv import load_dotenv
 from flask import (Flask, flash, g, redirect, render_template, request, session,
                    url_for)
 
+from seed_data import insert_samples
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 load_dotenv(os.path.join(BASE_DIR, ".env"))
 
@@ -312,6 +314,21 @@ def assignments():
     return render_template(
         "assignments.html", items=items, q=q, status=status, due_before=due_before
     )
+
+
+@app.route("/seed", methods=["POST"])
+def seed():
+    """Load realistic sample assignments, only into an empty planner."""
+    owner = current_owner()
+    db = get_db()
+    existing = db.execute("SELECT COUNT(*) FROM assignments WHERE owner = ?", (owner,)).fetchone()[0]
+    if existing:
+        flash("Sample data is only added to an empty planner.", "error")
+    else:
+        count = insert_samples(db, owner)
+        db.commit()
+        flash(f"Loaded {count} sample assignments. Delete them any time.", "success")
+    return redirect(url_for("dashboard"))
 
 
 @app.route("/toggle/<int:aid>", methods=["POST"])

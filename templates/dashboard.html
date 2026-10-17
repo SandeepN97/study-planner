@@ -34,8 +34,13 @@
 {% else %}
 <section class="empty">
   <h2>Nothing to work on yet</h2>
-  <p>Add your first assignment and your recommendation will show up here.</p>
-  <a class="btn-link" href="{{ url_for('add') }}">Add an assignment</a>
+  <p>Add your first assignment and your recommendation will show up here. Or look around with realistic sample data first.</p>
+  <div class="cta-row">
+    <a class="btn-link" href="{{ url_for('add') }}">Add an assignment</a>
+    {% if total == 0 %}
+    <form method="post" action="{{ url_for('seed') }}"><button type="submit" class="small">Load sample data</button></form>
+    {% endif %}
+  </div>
 </section>
 {% endif %}
 
