@@ -9,7 +9,36 @@ A small Flask + SQLite web app for tracking assignments and deciding what to wor
 3. Mark assignments done (or undo) and delete them.
 4. **Landing page and accounts** – a public home page at `/`. Use the app as a guest right away, or sign in with Google to keep your assignments on your account. Guest assignments move to your account when you sign in.
 
-## Prerequisites
+## Run it in VS Code (start here)
+
+1. Install **Python 3.9+** (<https://www.python.org/downloads/>; on Windows tick **"Add python.exe to PATH"**) and **VS Code** (<https://code.visualstudio.com/>).
+2. Delete the `venv` folder if there is one, then in VS Code: **File → Open Folder…** and pick the folder that contains `app.py`.
+3. Click **Install** on the pop-up "install recommended extensions" (the Python extension).
+4. Open a terminal (**Terminal → New Terminal**) and run the one-time setup:
+
+   macOS / Linux:
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate
+   pip install -r requirements.txt
+   ```
+   Windows (PowerShell):
+   ```powershell
+   py -m venv venv
+   venv\Scripts\Activate.ps1
+   pip install -r requirements.txt
+   ```
+   If VS Code asks "We noticed a new environment", click **Yes**. If PowerShell says "running scripts is disabled", run `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` and repeat.
+5. Press **F5** (or open **Run and Debug** in the left bar and click the green **Run Study Planner** button). If it asks to pick an interpreter, choose the one in `./venv`.
+6. Ctrl/Cmd-click the `http://127.0.0.1:5000` link in the terminal. Click **Continue as guest**, then **Load sample data**.
+
+Next time: open the folder and press **F5**. Stop with the red square. Problems? See [Troubleshooting](#troubleshooting). Google sign-in is optional.
+
+---
+
+## Detailed setup (other ways to get the code)
+
+### Prerequisites
 
 You need four things: **Git**, **Python 3.9+**, **pip**, and **venv** (Python's virtual-environment module). SQLite ships with Python, and the only package dependency is Flask (`Flask>=3.0`), which `pip` installs for you.
 
